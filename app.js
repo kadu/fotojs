@@ -1,6 +1,9 @@
-var fs = require('fs');
+const fs = require('fs');
 const { getSunrise, getSunset } = require('sunrise-sunset-js');
 const axios = require('axios');
+//var path = require('path');
+
+const osSlash = process.platform === 'win32' ? '\\' : '/';
 
 function pathToSave() {
   let dir = 'uploads';
@@ -10,8 +13,8 @@ function pathToSave() {
   let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
   let yyyy = today.getFullYear();
   today = yyyy + '_' + mm + '_' + dd;
-  dir +=  `\\${today}`;
-  dir = `${__dirname}\\${dir}`;
+  dir +=   `${osSlash}${today}`;
+  dir = `${__dirname}${osSlash}${dir}`;
 
 
   if (!fs.existsSync(dir)){
@@ -63,7 +66,7 @@ var job = new CronJob('*/45 * * * * *', function() {
       let date = new Date();
       let formatatedDate = (addZero(date.getDate() )) + "-" + (addZero(date.getMonth() + 1)) + "-" + date.getFullYear() + "_" + addZero(date.getHours()) + addZero(date.getMinutes()) + addZero(date.getSeconds());
       let pathToSaveImage = pathToSave();
-      let example_image_1 = await download_image('http://192.168.11.52/capture?_cb=1619016818033',   `${pathToSaveImage}\\${formatatedDate}.jpg`);
+      let example_image_1 = await download_image('http://192.168.11.52/capture?_cb=1619016818033',   `${pathToSaveImage}${osSlash}${formatatedDate}.jpg`);
     })();
 }, null, true, 'America/Sao_Paulo');
 job.start();
