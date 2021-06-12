@@ -1,4 +1,3 @@
-
 import Twit, {Response} from "twit";
 import dotenv  from "dotenv";
 
@@ -22,34 +21,66 @@ const options = {
   strictSSL: true,
 } as ITdata;
 
-let T = new Twit(options);
-let filePath = 'convertido.mp4';
+// let T = new Twit(options);
+// let filePath = 'my-saida0.mp4';
 
-T.postMediaChunked({ file_path: filePath }, function (err, data:any, response) {
-  const mediaIdStr = data.media_id_string;
-  const meta_params = { media_id: mediaIdStr };
+// T.postMediaChunked({ file_path: filePath }, function (err, data:any, response) {
+//   const mediaIdStr = data.media_id_string;
+//   const meta_params = { media_id: mediaIdStr };
 
-  T.post('media/metadata/create', meta_params, function (err, data, response) {
-    if(!err) {
-      const params = { status: 'Finalmente, conseguimos subir o video com NodeJS \\o/', media_ids: [mediaIdStr] };
+//   T.post('media/metadata/create', meta_params, function (err, data, response) {
+//     if(!err) {
+//       const params = { status: 'Rodando de uma vez só o ffmpeg \\o/', media_ids: [mediaIdStr] };
       
-      console.log("esperando 10 segundos");
-      setTimeout(() => {
-        T.post('statuses/update', params, function (err, tweet, response) {
+//       console.log("esperando 10 segundos");
+//       setTimeout(() => {
+//         T.post('statuses/update', params, function (err, tweet, response) {
         
-          console.log(tweet);
+//           console.log(tweet);
   
-          if (!err) {
-            console.log("sucesso");
-          } else {
-            console.log("deu erro no update")
-            console.log(err);
-          }
-        }); // fim TPost Update
-      }, 10000);
-    } else {
-      console.log('deu erro no create');
-      console.log(err);
-    }
-  }); // TPost create
-})
+//           if (!err) {
+//             console.log("sucesso");
+//           } else {
+//             console.log("deu erro no update")
+//             console.log(err);
+//           }
+//         }); // fim TPost Update
+//       }, 10000);
+//     } else {
+//       console.log('deu erro no create');
+//       console.log(err);
+//     }
+//   }); // TPost create
+// })
+
+export default function sendVideoToTwitter(filePath:string) {
+  let T = new Twit(options);
+  T.postMediaChunked({ file_path: filePath }, function (err, data:any, response) {
+    const mediaIdStr = data.media_id_string;
+    const meta_params = { media_id: mediaIdStr };
+  
+    T.post('media/metadata/create', meta_params, function (err, data, response) {
+      if(!err) {
+        const params = { status: 'Rodando de uma vez só o ffmpeg \\o/', media_ids: [mediaIdStr] };
+        
+        console.log("esperando 10 segundos");
+        setTimeout(() => {
+          T.post('statuses/update', params, function (err, tweet, response) {
+          
+            console.log(tweet);
+    
+            if (!err) {
+              console.log("sucesso");
+            } else {
+              console.log("deu erro no update")
+              console.log(err);
+            }
+          }); // fim TPost Update
+        }, 10000);
+      } else {
+        console.log('deu erro no create');
+        console.log(err);
+      }
+    }); // TPost create
+  })
+}
