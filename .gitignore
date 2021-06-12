@@ -48,4 +48,4 @@ dist/
 # Temporary folders
 tmp/
 temp/
-my-saida0.mp4
+*.mp4
