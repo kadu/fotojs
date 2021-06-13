@@ -48,3 +48,4 @@ dist/
 # Temporary folders
 tmp/
 temp/
+*.mp4
