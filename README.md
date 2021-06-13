@@ -31,3 +31,6 @@ Faça o clone do github, configure as variavies de config no topo do arquivo.
 Use Typescript to write this simple project was easy
 
   
+##
+// sendVideoToTwitter('my-saida0.mp4');
+//console.log(shell.exec('ffmpeg -framerate 30 -pattern_type glob -i "./dist/uploads/2021_05_31/*.jpg" -s:v 800x600 -c:v libx264 -crf 17 -pix_fmt yuv420p -strict -2 -acodec aac my-saida0.mp4').code);

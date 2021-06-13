@@ -1,88 +1,73 @@
-import axios from 'axios';
-import fs from 'fs';
-import { getSunrise, getSunset } from 'sunrise-sunset-js';
+// import shell from 'shelljs';
+// import sendVideoToTwitter from "./twitter";
 import { CronJob } from 'cron';
+import { download_image } from "./utils";
 
-const config = {
-  imageURL: 'http://192.168.11.52/capture?_cb=1619016818033',
-  cron: '* * * * *', // once per minute
-  lat: -22.594164,
-  lng: -47.386982,
-  tz: 'America/Sao_Paulo',
-  dir: 'uploads'
-}
+const debug = true;
 
-const osSlash = process.platform === 'win32' ? '\\' : '/';
-let lastSun = true;
-
-const hasSun =(lat: number, lng: number) => {
-  const sunset = getSunset(lat, lng);
-  const sunrise = getSunrise(lat, lng);
-  const check = new Date();
-  const result = check <= sunset && check >= sunrise;
-
-  if(lastSun !== result) {
-    console.log( result ? "Sol" : "Noite");
-    lastSun = result;
+const config = [
+  {
+    imageURL: 'http://192.168.11.52/capture?_cb=1619016818033',
+    cron: '* * * * *', // once per minute
+    lat: -22.594164,
+    lng: -47.386982,
+    tz: 'America/Sao_Paulo',
+    dir: 'manjericao_daily'
+  },
+  {
+    imageURL: 'http://192.168.11.52/capture?_cb=1619016818033',
+    cron: '*/30 * * * *', // 30 minutes
+    lat: -22.594164,
+    lng: -47.386982,
+    tz: 'America/Sao_Paulo',
+    dir: 'manjericao_weekly'
+  },
+  {
+    imageURL: 'http://192.168.11.52/capture?_cb=1619016818033',
+    cron: '0 * * * *', // every hour
+    lat: -22.594164,
+    lng: -47.386982,
+    tz: 'America/Sao_Paulo',
+    dir: 'manjericao_monthly'
   }
+];
 
-  return (result);
-}
-
-let pathToSave = () => {
-  let dir = config.dir;
-  let today = new Date();
-  let dd = String(today.getDate()).padStart(2, '0');
-  let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
-  let yyyy = today.getFullYear();
-  let hour = String(today.getHours()).padStart(2,'0');
-  let min  = String(today.getMinutes()).padStart(2,'0');
-  let secs = String(today.getSeconds()).padStart(2,'0');
-
-  
-  const formatedDate = yyyy + '_' + mm + '_' + dd;
-  const imageNameAux = yyyy + '_' + mm + '_' + dd + '-' + hour + '_' + min + '_' + secs + '.jpg';;
-  dir += `${osSlash}${formatedDate}`;
-  dir = `${__dirname}${osSlash}${dir}`;
-  const imageName = `${dir}${osSlash}${imageNameAux}`;
-
-  if (!fs.existsSync(dir)){
-    fs.mkdirSync(dir, { recursive: true });
-  }
-
-  return imageName;
-}
-
-const download_image = async (url: string, image_path: string) => {
-  if(!hasSun(config.lat, config.lng)) {
-    return; // cancel download at nigth (without Sun)
-  }
-
-  axios({
-    url,
-    responseType: 'stream',
-  }).then(
-    response =>
-      new Promise((resolve, reject) => {
-        response.data
-          .pipe(fs.createWriteStream(image_path))
-          .on('finish', () => resolve(image_path))
-          .on('error', (e:any) => reject(e));
-      }),
-  );
-  console.log(`${image_path} saved!`);
-}
-
-let cronJob = new CronJob(config.cron, async () => {
+let cjDaily = new CronJob(config[0].cron, async () => {
   try {    
-    let imageFilePath = pathToSave();
-    download_image(config.imageURL, imageFilePath);    
+    download_image(config[0]);    
   } catch (e: any) {
     console.log(e);
   }
-}, null, true, config.tz);
+}, null, true, config[0].tz);
 
-if (!cronJob.running) {
-  cronJob.start();
-}
+let cjWeekly = new CronJob(config[1].cron, async () => {
+  try {    
+    download_image(config[1]);    
+  } catch (e: any) {
+    console.log(e);
+  }
+}, null, true, config[1].tz);
+
+let cjMonthly = new CronJob(config[2].cron, async () => {
+  try {    
+    download_image(config[2]);    
+  } catch (e: any) {
+    console.log(e);
+  }
+}, null, true, config[2].tz);
+
 console.log("⚡️ Starting cronjobs");
+if (!cjDaily.running) {
+  console.log(' ⏰ - Daily OK');
+  cjDaily.start();
+}
+
+if (!cjWeekly.running) {
+  console.log(' ⏰ - Weekly OK');
+  cjWeekly.start();
+}
+
+if (!cjMonthly.running) {
+  console.log(' ⏰ - Monthly OK');
+  cjMonthly.start();
+}
