@@ -1,4 +1,4 @@
-import Twit, {Response} from "twit";
+import Twit from "twit";
 import dotenv  from "dotenv";
 
 dotenv.config();
@@ -33,7 +33,7 @@ export default function sendVideoToTwitter(filePath:string, twittermessage: stri
         
         console.log("esperando 10 segundos");
         setTimeout(() => {
-          T.post('statuses/update', params, function (err, tweet, response) {
+          T.post('statuses/update', params, function (err, tweet, response) {          
             console.log(tweet);
     
             if (!err) {
