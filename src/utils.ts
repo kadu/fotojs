@@ -6,12 +6,25 @@ import fs from 'fs';
 const osSlash = process.platform === 'win32' ? '\\' : '/';
 let lastSun = true;
 
+let dirToSave = (baseDir: string = '') => {  
+  if(baseDir.length === 0) {
+    throw new Error("Necessário informar um diretório base");
+  }
+
+  let dir = `${__dirname}`;
+  if(baseDir.length > 0) {
+    dir += `${osSlash}${baseDir}${osSlash}`
+  }
+
+  return dir;
+}
+
 let pathToSave = (baseDir: string = '') => {  
   if(baseDir.length === 0) {
     throw new Error("Necessário informar um diretório base");
   }
 
-  let dir = '';
+  let dir = dirToSave(baseDir);
   let today = new Date();
   let dd = String(today.getDate()).padStart(2, '0');
   let mm = String(today.getMonth() + 1).padStart(2, '0'); //January is 0!
@@ -20,15 +33,11 @@ let pathToSave = (baseDir: string = '') => {
   let min  = String(today.getMinutes()).padStart(2,'0');
   let secs = String(today.getSeconds()).padStart(2,'0');
 
-  dir = `${__dirname}`;
-
   let formatedDate;
-  formatedDate = yyyy + '_' + mm + '_' + dd;
-  if(baseDir.length > 0) {
-    dir += `${osSlash}${baseDir}`
-  }
-  const imageNameAux = yyyy + '_' + mm + '_' + dd + '-' + hour + '_' + min + '_' + secs + '.jpg';;
-  const imageName = `${dir}${osSlash}${imageNameAux}`;
+  formatedDate = yyyy + '_' + mm + '_' + dd;  
+  
+  const imageNameAux = yyyy + '_' + mm + '_' + dd + '-' + hour + '_' + min + '_' + secs + '.jpg';
+  const imageName = `${dir}${imageNameAux}`;
 
   if (!fs.existsSync(dir)){
     fs.mkdirSync(dir, { recursive: true });
@@ -73,4 +82,4 @@ const download_image = async (_config:any) => {
   console.log(`${imagePath} saved!`);
 }
 
-export {hasSun, pathToSave, download_image};
+export {hasSun, pathToSave, download_image, dirToSave};
