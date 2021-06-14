@@ -60,7 +60,6 @@ let cjWeekly       = createCronJob(config[1]);
 let cjWeeklyVideo  = createCronVideoJob(config[1]);
 let cjMonthly      = createCronJob(config[2]);
 let cjMonthlyVideo = createCronVideoJob(config[2]);
-let cjTeste        = createCronVideoJob(config[3]);
 
 console.log("⚡️ Starting cronjobs");
 
