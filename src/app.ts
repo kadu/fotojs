@@ -3,58 +3,52 @@
 import { CronJob } from 'cron';
 import { download_image } from "./utils";
 
-const debug = true;
-
 const config = [
   {
     imageURL: 'http://192.168.11.52/capture?_cb=1619016818033',
-    cron: '* * * * *', // once per minute
+    cron: '* * * * *', // “At every minute.”
     lat: -22.594164,
     lng: -47.386982,
     tz: 'America/Sao_Paulo',
-    dir: 'manjericao_daily'
+    dir: 'manjericao_daily',
+    video_cron: '0 0 * * 0', //“At 00:00 on Sunday.”
+    twitter_message: ''
   },
   {
     imageURL: 'http://192.168.11.52/capture?_cb=1619016818033',
-    cron: '*/30 * * * *', // 30 minutes
+    cron: '*/30 * * * *', // “At every 30th minute.”
     lat: -22.594164,
     lng: -47.386982,
     tz: 'America/Sao_Paulo',
-    dir: 'manjericao_weekly'
+    dir: 'manjericao_weekly',
+    video_cron: '0 0 5 * *', // “At 00:00 on day-of-month 5.”
+    twitter_message: ''
   },
   {
     imageURL: 'http://192.168.11.52/capture?_cb=1619016818033',
-    cron: '0 * * * *', // every hour
+    cron: '0 * * * *', // “At minute 0.”
     lat: -22.594164,
     lng: -47.386982,
     tz: 'America/Sao_Paulo',
-    dir: 'manjericao_monthly'
+    dir: 'manjericao_monthly',
+    video_cron: '0 0 10 */6 *', // “At 00:00 on day-of-month 10 in every 6th month.”
+    twitter_message: ''
   }
 ];
 
-let cjDaily = new CronJob(config[0].cron, async () => {
-  try {    
-    download_image(config[0]);    
-  } catch (e: any) {
-    console.log(e);
-  }
-}, null, true, config[0].tz);
+function createCronJob(_config: any) {
+  return new CronJob(_config.cron, async () => {
+    try {    
+      download_image(_config);    
+    } catch (e: any) {
+      console.log(e);
+    }
+  }, null, true, _config.tz);
+}
 
-let cjWeekly = new CronJob(config[1].cron, async () => {
-  try {    
-    download_image(config[1]);    
-  } catch (e: any) {
-    console.log(e);
-  }
-}, null, true, config[1].tz);
-
-let cjMonthly = new CronJob(config[2].cron, async () => {
-  try {    
-    download_image(config[2]);    
-  } catch (e: any) {
-    console.log(e);
-  }
-}, null, true, config[2].tz);
+let cjDaily   = createCronJob(config[0]);
+let cjWeekly  = createCronJob(config[1]);
+let cjMonthly = createCronJob(config[2]);
 
 console.log("⚡️ Starting cronjobs");
 if (!cjDaily.running) {
