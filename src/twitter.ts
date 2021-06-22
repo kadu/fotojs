@@ -24,6 +24,13 @@ const options = {
 export default function sendVideoToTwitter(filePath:string, twittermessage: string) {
   let T = new Twit(options);
   T.postMediaChunked({ file_path: filePath }, function (err, data:any, response) {
+    console.log("****data*****");
+    console.log(data);
+    console.log("*****err****");
+    console.log(err);
+    console.log("****response*****");
+    console.log(response);
+    console.log("*********");
     const mediaIdStr = data.media_id_string;
     const meta_params = { media_id: mediaIdStr };
   
