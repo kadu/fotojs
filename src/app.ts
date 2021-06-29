@@ -39,7 +39,6 @@ const config = [
 function createCronJob(_config: any) {
   return new CronJob(_config.cron, async () => {
     try {    
-      console.log("Starting image cron");
       download_image(_config);    
     } catch (e: any) {
       console.log(e);
@@ -49,7 +48,6 @@ function createCronJob(_config: any) {
 
 function createCronVideoJob(_config: any) {
   return new CronJob(_config.video_cron, async () => {
-    console.log("Starting video cron");
     let dir = dirToSave(_config.dir);
     shell.exec(`ffmpeg -framerate 30 -y -pattern_type glob -i "${dir}*.jpg" -preset slow -s:v 800x600 -c:v libx264 -crf 18 -filter:v "setpts=0.3*PTS" -pix_fmt yuv420p -strict -2 -acodec aac ${dir}timelapse.mp4`).code;
     sendVideoToTwitter(`${dir}timelapse.mp4`, _config.twitter_message);
