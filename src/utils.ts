@@ -41,6 +41,7 @@ let pathToSave = (baseDir: string = '') => {
 
   if (!fs.existsSync(dir)){
     fs.mkdirSync(dir, { recursive: true });
+    fs.mkdirSync(dir+'ppp', { recursive: true });
   }
 
   return imageName;

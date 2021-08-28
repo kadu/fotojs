@@ -12,7 +12,7 @@ const config = [
     lng: -47.386982,
     tz: 'America/Sao_Paulo',
     dir: 'manjericao_daily',
-    video_cron: '57 11 * * *', //“At 00:00 on Sunday.”
+    video_cron: '24 12 * * *', //“At 00:00 on Sunday.”
     twitter_message: 'Atualização semanal do ManjeriçãoIOT (Fotos tiradas a cada minuto)'
   },
   {
@@ -58,6 +58,8 @@ function createCronVideoJob(_config: any) {
     console.log(`File size ${fileSizeInMegabytes.toFixed(2)}Mb`);
     if(fileSizeInBytes < 15728640) {
       sendVideoToTwitter(`${dir}timelapse.mp4`, _config.twitter_message);
+      shell.exec(`rm ${dir}ppp/*.jpg`);
+      shell.exec(`mv ${dir}*.jpg ${dir}ppp`);
     } else {
       console.log("ARQUIVO DE VIDEO MUITO GRANDE > 15Mb");
     }
