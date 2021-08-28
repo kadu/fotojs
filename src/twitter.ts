@@ -44,7 +44,7 @@ export default function sendVideoToTwitter(filePath:string, twittermessage: stri
             console.log(tweet);
     
             if (!err) {
-              console.log("Post feito no Twitter!");
+              console.log("Post feito no Twitter!");              
             } else {
               console.log("deu erro no update")
               console.log(err);
