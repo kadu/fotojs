@@ -23,7 +23,7 @@ const config = [
     tz: 'America/Sao_Paulo',
     dir: 'manjericao_weekly',
     video_cron: '0 0 5 * *', // “At 00:00 on day-of-month 5.”
-    twitter_message: 'Hoje é dia de pagamento, logo vamos ver o vídeo mensal do crescimento do ManjericãoIOT (fotos a cada 30 minutos)'
+    twitter_message: 'Hoje é dia de pagamento, logo vamos ver o vídeo mensal do crescimento do ManjericãoIOT (fotos a cada 5 minutos)'
   },
   {
     imageURL: 'http://192.168.11.52/capture?_cb=1619016818033',
