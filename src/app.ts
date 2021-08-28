@@ -1,5 +1,6 @@
 import shell from 'shelljs';
 import sendVideoToTwitter from "./twitter";
+import * as fs from 'fs'
 import { CronJob } from 'cron';
 import { download_image, pathToSave, dirToSave } from "./utils";
 
@@ -11,7 +12,7 @@ const config = [
     lng: -47.386982,
     tz: 'America/Sao_Paulo',
     dir: 'manjericao_daily',
-    video_cron: '0 0 * * 0', //“At 00:00 on Sunday.”
+    video_cron: '57 11 * * *', //“At 00:00 on Sunday.”
     twitter_message: 'Atualização semanal do ManjeriçãoIOT (Fotos tiradas a cada minuto)'
   },
   {
@@ -50,8 +51,16 @@ function createCronVideoJob(_config: any) {
   return new CronJob(_config.video_cron, async () => {
     console.log('starting video cron');
     let dir = dirToSave(_config.dir);
-    shell.exec(`ffmpeg -framerate 30 -y -pattern_type glob -i "${dir}*.jpg" -preset slow -s:v 800x600 -c:v libx264 -crf 18 -filter:v "setpts=0.10*PTS" -pix_fmt yuv420p -strict -2 -acodec aac ${dir}timelapse.mp4`).code;
-    sendVideoToTwitter(`${dir}timelapse.mp4`, _config.twitter_message);
+    shell.exec(`ffmpeg -framerate 30 -y -pattern_type glob -i "${dir}*.jpg" -preset slow -s:v 800x600 -c:v libx264 -crf 18 -fs 14M -filter:v "setpts=0.10*PTS" -pix_fmt yuv420p -strict -2 -acodec aac ${dir}timelapse.mp4`).code;
+    const stats = fs.statSync(`${dir}timelapse.mp4`);
+    const fileSizeInBytes = stats.size;
+    const fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
+    console.log(`File size ${fileSizeInMegabytes.toFixed(2)}Mb`);
+    if(fileSizeInBytes < 15728640) {
+      sendVideoToTwitter(`${dir}timelapse.mp4`, _config.twitter_message);
+    } else {
+      console.log("ARQUIVO DE VIDEO MUITO GRANDE > 15Mb");
+    }
   }, null, true, _config.tz);
 }
 
