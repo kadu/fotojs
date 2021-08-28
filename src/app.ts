@@ -12,7 +12,7 @@ const config = [
     lng: -47.386982,
     tz: 'America/Sao_Paulo',
     dir: 'manjericao_daily',
-    video_cron: '24 12 * * *', //“At 00:00 on Sunday.”
+    video_cron: '0 0 * * 0', //“At 00:00 on Sunday.”
     twitter_message: 'Atualização semanal do ManjeriçãoIOT (Fotos tiradas a cada minuto)'
   },
   {
