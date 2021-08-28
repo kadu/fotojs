@@ -17,7 +17,7 @@ const config = [
   },
   {
     imageURL: 'http://192.168.11.52/capture?_cb=1619016818033',
-    cron: '*/30 * * * *', // “At every 30th minute.”
+    cron: '*/5 * * * *', // “At every 5th minute.”
     lat: -22.594164,
     lng: -47.386982,
     tz: 'America/Sao_Paulo',
