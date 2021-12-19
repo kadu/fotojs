@@ -1,6 +1,7 @@
 import axios from 'axios';
 import { getSunrise, getSunset } from 'sunrise-sunset-js';
 import fs from 'fs';
+import Jimp from 'jimp';
 // import { response } from 'express';
 
 const osSlash = process.platform === 'win32' ? '\\' : '/';
@@ -75,7 +76,15 @@ const download_image = async (_config:any) => {
       new Promise((resolve, reject) => {
       response.data
         .pipe(fs.createWriteStream(imagePath))
-        .on('finish', () => resolve(imagePath))
+        .on('finish', () => {
+          resolve(imagePath)
+          Jimp.read(imagePath, (err, pict) => {
+            if (err) throw err;
+            pict
+              .rotate(90)
+              .write(imagePath); // save
+          });
+        })
         .on('error', (e:any) => reject(e));
       }),
   );
