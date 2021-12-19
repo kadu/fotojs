@@ -6,7 +6,7 @@ import { download_image, pathToSave, dirToSave } from "./utils";
 
 const config = [
   {
-    imageURL: 'http://192.168.11.52/capture?_cb=1619016818033',
+    imageURL: 'http://192.168.11.52/capture?_cb=1639921092626',
     cron: '* * * * *', // “At every minute.”
     lat: -22.594164,
     lng: -47.386982,
@@ -16,7 +16,7 @@ const config = [
     twitter_message: 'Atualização semanal do ManjeriçãoIOT (Fotos tiradas a cada minuto)'
   },
   {
-    imageURL: 'http://192.168.11.52/capture?_cb=1619016818033',
+    imageURL: 'http://192.168.11.52/capture?_cb=1639921092626',
     cron: '*/5 * * * *', // “At every 5th minute.”
     lat: -22.594164,
     lng: -47.386982,
@@ -26,7 +26,7 @@ const config = [
     twitter_message: 'Hoje é dia de pagamento, logo vamos ver o vídeo mensal do crescimento do ManjericãoIOT (fotos a cada 5 minutos)'
   },
   {
-    imageURL: 'http://192.168.11.52/capture?_cb=1619016818033',
+    imageURL: 'http://192.168.11.52/capture?_cb=1639921092626',
     cron: '0 * * * *', // “At minute 0.”
     lat: -22.594164,
     lng: -47.386982,
